@@ -1,8 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { Provider } from 'react-redux';
 
 import Routes from './routes/';
+import store from './store';
 
 const app = document.getElementById('app');
-console.log(<Routes />);
-ReactDOM.render(<Routes />, app);
+console.log("Rendering application");
+ReactDOM.render(<Provider store={store}><Routes /></Provider>, app);
