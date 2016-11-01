@@ -1,11 +1,38 @@
 import axios from "axios";
 
-export function fetchLists(api) {
+export default function listActions(apiUrl){
+
+  if(!apiUrl) throw {name: "IllegalArgumentException", message: "Please pass a valid apiUrl to listsActions."};
   return {
-    type: "FETCH_LISTS",
-    payload: axios.get(api.links.lists)
+    fetchLists,
+    addList,
+    deleteList
+  }
+
+  function fetchLists() {
+    return {
+      type: "FETCH_LISTS",
+      payload: axios.get(apiUrl)
+    }
+  }
+
+  function addList(list) {
+    return {
+      type: "ADD_LIST",
+      payload: axios.post(apiUrl, list)
+    }
+  }
+
+  function deleteList(listId) {
+    return {
+      type: "DELETE_LIST",
+      payload: axios.delete(apiUrl + "/" + listId),
+      listId
+    }
   }
 }
+
+
 
 
 // export function addLists(api) {

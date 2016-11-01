@@ -5,7 +5,7 @@ export default function todoLists(props) {
   console.log("TodoLists props: ", props);
   return (
     <ul>
-      {props.lists.map((list, i) => <TodoList key={i} list={list} />)}
+      {props.lists.map((list, i) => <TodoList key={i} list={list} handleDelete={props.handleDelete} />)}
     </ul>
   )
 }

@@ -1,8 +1,10 @@
 import React from 'react';
 import {connect} from 'react-redux';
 
+import AddListForm from '../components/AddListForm';
 import TodoLists from '../components/TodoLists';
-import {fetchLists} from '../../../../actions/listsActions'
+import listActions from '../../../../actions/listsActions';
+
 
 @connect((store) => {
   return {
@@ -13,14 +15,33 @@ import {fetchLists} from '../../../../actions/listsActions'
 
 export default class TodoListsContainer extends React.Component {
 
+  constructor(props){
+    super(props);
+    this.listActions = listActions(this.props.api.links.lists);
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
   componentWillMount() {
     console.log(this);
-    this.props.dispatch(fetchLists(this.props.api))
+    this.props.dispatch(this.listActions.fetchLists())
+  }
+
+  handleSubmit(list) {
+    console.log("handling submit");
+    this.props.dispatch(this.listActions.addList(list))
+  }
+
+  handleDelete(list) {
+    console.log('handling delete');
+    this.props.dispatch(this.listActions.deleteList(list.id));
   }
 
   render() {
     return (
-      <TodoLists lists={this.props.lists.lists}/>
+      <div>
+        <AddListForm handleSubmit={this.handleSubmit}/>
+        <TodoLists lists={this.props.lists.lists} handleDelete={this.handleDelete.bind(this)}/>
+      </div>
     )
   }
 }
