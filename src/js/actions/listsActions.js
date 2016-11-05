@@ -23,11 +23,11 @@ export default function listActions(apiUrl){
     }
   }
 
-  function deleteList(listId) {
+  function deleteList(list) {
+    console.log("Action Delete!!!!!", list);
     return {
       type: "DELETE_LIST",
-      payload: axios.delete(apiUrl + "/" + listId),
-      listId
+      payload: axios.delete(list.links.self)
     }
   }
 }

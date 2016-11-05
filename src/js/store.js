@@ -1,8 +1,9 @@
 import { applyMiddleware, createStore } from "redux"
 
-import logger from "redux-logger"
-import thunk from "redux-thunk"
-import promise from "redux-promise-middleware"
+import logger from "redux-logger";
+import thunk from "redux-thunk";
+import promise from "redux-promise-middleware";
+import Immutable from "immutable";
 
 import reducer from "./reducers"
 

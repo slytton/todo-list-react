@@ -8,8 +8,8 @@ import listActions from '../../../../actions/listsActions';
 
 @connect((store) => {
   return {
-    api: store.api,
-    lists: store.lists
+    api: store.get("api").toJS(),
+    lists: store.get("lists").toJS()
   };
 })
 
@@ -33,7 +33,7 @@ export default class TodoListsContainer extends React.Component {
 
   handleDelete(list) {
     console.log('handling delete');
-    this.props.dispatch(this.listActions.deleteList(list.id));
+    this.props.dispatch(this.listActions.deleteList(list));
   }
 
   render() {

@@ -7,6 +7,7 @@ import {connect} from 'react-redux'
 require('./layout.scss')
 
 @connect((store) => {
+  store = store.toJS();
   return {
     api: store.api
   };

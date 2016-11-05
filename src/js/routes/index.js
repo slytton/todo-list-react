@@ -9,8 +9,7 @@ import MyLists from "./pages/my-lists"
 import { fetchApi } from "../actions/apiActions"
 
 @connect((store) => {
-  return {
-  };
+  return {};
 })
 
 export default class Routes extends React.Component{

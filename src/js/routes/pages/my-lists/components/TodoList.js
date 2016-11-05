@@ -13,6 +13,7 @@ export default function TodoList(props) {
   )
 
   function deleteList() {
+    console.log("DeleteList");
     props.handleDelete(props.list);
   }
 

@@ -1,61 +1,58 @@
-export default function listsReducer(state={
-    lists: [],
+import Immutable from 'immutable';
+
+
+export default function listsReducer(state=Immutable.Map({
+    lists: Immutable.List([]),
     fetching: false,
     fetched: false,
     error: null,
-  }, action) {
+  }), action) {
 
     // Clear errors.
     // if(action.type.includes("LISTS"))
     switch (action.type) {
       case "FETCH_LISTS_PENDING": {
-        return {...state, fetching: true}
+        return state.set('fetching', true);
       }
       case "FETCH_LISTS_REJECTED": {
-        return {...state, fetching: false, error: action.payload}
+        return state.withMutations((state) => {
+          state.set("fetching", false);
+          state.set("error", Immutable.fromJS(action.payload.data))
+          return state;
+        })
       }
       case "FETCH_LISTS_FULFILLED": {
-        return {
-          ...state,
-          fetching: false,
-          fetched: true,
-          lists: Array.from(action.payload.data.data),
-        }
+        return state.withMutations((state) => {
+          state.set("fetching", false);
+          state.set("fetched", true);
+          state.set("lists", Immutable.fromJS(Array.from(action.payload.data.data)));
+          return state;
+        })
       }
-      case "ADD_LIST_PENDING": {
+
+      case "ADD_LIST_REJECTED": {
+        return state.set('errors', action.payload.data.data.errors);
+      }
+      
+      case "ADD_LIST_FULFILLED": {
+        let newList = action.payload.data.data;
+        return state.updateIn(['lists'], (list)=>list.push(newList));
+      }
+
+      case "DELETE_LIST_PENDING": {
+        // let newLists = [...state.lists];
+        // for(var i = 0; i < newLists; i++){
+        //   let list = state.lists[i];
+        //   if(list.id === action.listId){
+        //     {...list, deleting: true}
+        //   }
+        // }
         // return {
         //   ...state,
-        //   lists: [...state.lists.lists, action.payload],
-        // }
-      }
-      case "ADD_LIST_REJECTED": {
-        return {
-          ...state,
-          // lists: {...state.lists, errors: action.payload.data.data.errors},
-        }
-      }
-      case "ADD_LIST_FULFILLED": {
-        state = {
-          ...state,
-          lists: [...state.lists, action.payload.data.data]
-        }
-
+        //
+        // };
         return state;
       }
-
-      // case "DELETE_LIST_PENDING": {
-      //   let newLists = [...state.lists];
-      //   for(var i = 0; i < newLists; i++){
-      //     let list = state.lists[i];
-      //     if(list.id === action.listId){
-      //       {...list, deleting: true}
-      //     }
-      //   }
-      //   return {
-      //     ...state,
-      //
-      //   };
-      // }
       //
       // case "DELETE_LIST_REJECTED": {
       //   // let updatedList = null;
@@ -76,20 +73,9 @@ export default function listsReducer(state={
       // }
 
       case "DELETE_LIST_FULFILLED": {
-        console.log("***************", action.payload);
-        let lists = state.lists
-        let newLists = [...lists]
-        let deletedList = action.payload.data.data;
-        for(let i = 0; i < lists.length; i++){
-          if(lists[i].id === deletedList.id) {
-            newLists.splice(i, 1);
-            break;
-          }
-        }
-        state = {
-          ...state,
-          lists: newLists
-        }
+        let toDelete = action.payload.data.data;
+        let newLists = state.get('lists').toJS().filter((list) => list.id != toDelete.id);
+        return state.set("lists", Immutable.fromJS(newLists));;
       }
       // case "UPDATE_LIST": {
       //   const { id, text } = action.payload
